@@ -1,4 +1,5 @@
 import axios from "axios";
+import Game from "../types/Game";
 
 const API_KEY = "f7c9de79903b47dd9c6419160aecdeab";
 

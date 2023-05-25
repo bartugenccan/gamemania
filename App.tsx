@@ -1,34 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import ApiService from "./services/ApiService";
-import Game from "./types/Game";
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "./screens/HomeScreen/HomeScreen";
+import SearchScreen from "./screens/SearchScreen/SearchScreen";
+import ProfileScreen from "./screens/ProfileScreen/ProfileScreen";
 
-export default function App() {
-  useEffect(() => {
-    ApiService.fetchGames()
-      .then((games: Game[]) => {
-        const gameNames = games.map((game: Game) => game.name);
-        console.log("Games:", gameNames);
-      })
-      .catch((error) => {
-        console.log("Error:", error);
-      });
-  });
+const Tab = createBottomTabNavigator();
 
+const App: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
