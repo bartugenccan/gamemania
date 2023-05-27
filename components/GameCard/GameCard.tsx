@@ -1,4 +1,6 @@
 import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import Game from "../../types/Game";
 
 interface GameCardProps {
@@ -6,8 +8,14 @@ interface GameCardProps {
 }
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate("GameDetail" as never, { id: game.id } as never);
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <Image style={styles.image} source={{ uri: game.background_image }} />
     </TouchableOpacity>
   );

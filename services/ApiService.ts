@@ -19,6 +19,22 @@ const ApiService = {
       throw new Error(error.message);
     }
   },
+
+  fetchSingleGame: async (id: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.rawg.io/api/games/${id}?key=${API_KEY}`
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        throw new Error("Failed to fetch game.");
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  },
 };
 
 export default ApiService;

@@ -7,6 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@rneui/themed";
 import GameCard from "../GameCard/GameCard";
 import { ScrollView } from "react-native";
+import React from "react";
 
 const GameList: React.FC = () => {
   const [randomGame, setRandomGame] = useState<Game | null>(null);
