@@ -7,8 +7,12 @@ import ProfileScreen from "../ProfileScreen/ProfileScreen";
 const Tab = createBottomTabNavigator();
 const HomeScreen: React.FC = () => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="GameList" component={GameList} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen name="Home" component={GameList} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

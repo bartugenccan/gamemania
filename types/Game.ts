@@ -11,6 +11,7 @@ interface Game {
   genres: Genre[];
   playtime: number;
   released: string;
+  description_raw: string;
 }
 
 export default Game;
