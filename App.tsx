@@ -7,13 +7,14 @@ import SearchScreen from "./screens/SearchScreen/SearchScreen";
 import ProfileScreen from "./screens/ProfileScreen/ProfileScreen";
 import React from "react";
 import GameDetailScreen from "./screens/GameDetailScreen/GameDetailScreen";
+import LoginScreen from "./screens/LoginScreen/LoginScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer>
+    /*<NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="GameList"
@@ -36,7 +37,8 @@ const App: React.FC = () => {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+  </NavigationContainer>*/
+    <LoginScreen />
   );
 };
 
