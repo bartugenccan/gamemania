@@ -3,6 +3,7 @@ import { View, TextInput, Text, Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "@rneui/base";
 import styles from "./login.style";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Firebase
 import { FIREBASE_AUTH } from "../../firebaseConfig";
@@ -11,24 +12,29 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
+
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
-      .then((userCredential) => {
-        // Login successfull
-        const user = userCredential.user;
-        console.log("Login successfull", user);
-      })
-      .catch((error) => {
-        // Login failed
-        const errorMessage = error.message;
-        Alert.alert("Login failed", errorMessage);
-      });
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const userData = { email: email, password: password };
+      await AsyncStorage.setItem("loggedInUser", JSON.stringify(userData));
+      console.log("Login successfull", user);
+    } catch (error: any) {
+      // Login failed
+      const errorMessage = error.message;
+      Alert.alert("Login failed", errorMessage);
+    }
   };
 
   const handleRegister = () => {
