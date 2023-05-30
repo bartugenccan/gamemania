@@ -9,23 +9,25 @@ import React, { useEffect, useState } from "react";
 import GameDetailScreen from "./screens/GameDetailScreen/GameDetailScreen";
 import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLoginScreen, setShowLoginScreen] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const checkLoggedInUser = async () => {
     const userData = await AsyncStorage.getItem("loggedInUser");
 
     if (userData) {
       setIsLoggedIn(true);
-      setShowLoginScreen(false);
+      setIsLoading(false);
       const parsedUserData = JSON.parse(userData);
       console.log("User already logged in", parsedUserData);
     } else {
+      setIsLoggedIn(false);
       console.log("User didn't log in");
     }
   };
@@ -33,6 +35,10 @@ const App: React.FC = () => {
   useEffect(() => {
     checkLoggedInUser();
   }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <NavigationContainer>

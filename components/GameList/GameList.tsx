@@ -8,6 +8,7 @@ import { Button } from "@rneui/themed";
 import GameCard from "../GameCard/GameCard";
 import { ScrollView } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const GameList: React.FC = () => {
   const [randomGame, setRandomGame] = useState<Game | null>(null);
@@ -15,6 +16,8 @@ const GameList: React.FC = () => {
   const [groupedGames, setGroupedGames] = useState<{ [genre: string]: Game[] }>(
     {}
   );
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Fetching All Games
@@ -55,6 +58,10 @@ const GameList: React.FC = () => {
     return <GameCard game={game} />;
   };
 
+  const handlePress = () => {
+    navigation.navigate("GameDetail" as never, { id: randomGame?.id } as never);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <ImageBackground
@@ -72,6 +79,7 @@ const GameList: React.FC = () => {
             titleStyle={{ color: "gray", fontWeight: "bold" }}
             containerStyle={{ width: 100, alignSelf: "center" }}
             buttonStyle={{ borderColor: "gray", borderRadius: 10 }}
+            onPress={handlePress}
           />
         </LinearGradient>
       </ImageBackground>

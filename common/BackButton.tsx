@@ -12,7 +12,7 @@ const BackButton: React.FC = () => {
 
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <Ionicons name="arrow-back" size={24} color="black" />
+      <Ionicons name="arrow-back" size={24} color="white" />
     </TouchableOpacity>
   );
 };
@@ -20,9 +20,12 @@ const BackButton: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 20,
+    top: 10,
     left: 20,
     zIndex: 1,
+    backgroundColor: "gray",
+    padding:10,
+    borderRadius: 50,
   },
 });
 
