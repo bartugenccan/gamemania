@@ -22,21 +22,26 @@ const ProfileTab: React.FC = () => {
   const userData = useSelector((state: any) => state.user.userData);
   const dispatch = useDispatch();
 
-  const fetchFavorites = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("userId", "==", userData.userId)
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const favoritesArray = doc.data().favorites || [];
-      setFavorites(favoritesArray);
-    });
-  };
-
   useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!userData || !userData.userId) {
+        setFavorites([]);
+        return;
+      }
+
+      const q = query(
+        collection(db, "users"),
+        where("userId", "==", userData.userId)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const favoritesArray = doc.data().favorites || [];
+        setFavorites(favoritesArray);
+      });
+    };
+
     fetchFavorites();
-  }, [userData.userId, favorites]);
+  }, [userData, favorites]);
 
   const handleLogout = async () => {
     // Firebase'den çıkış yap
@@ -45,6 +50,8 @@ const ProfileTab: React.FC = () => {
 
     // AsyncStorage'deki oturum bilgilerini temizle
     await AsyncStorage.removeItem("loggedInUser");
+
+    setFavorites([]);
 
     dispatch(clearUserData());
 

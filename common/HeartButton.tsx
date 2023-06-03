@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import Game from "../types/Game";
 import { handleToggleFavorite } from "../firebaseUtils";
 import { RootState } from "../store";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { FIREBASE_DB } from "../firebaseConfig";
 
 interface HeartButtonProps {
   game: Game | null;
@@ -13,28 +15,62 @@ interface HeartButtonProps {
 const HeartButton: React.FC<HeartButtonProps> = ({ game }) => {
   const userData = useSelector((state: RootState) => state.user.userData);
   const [isInFavorites, setIsInFavorites] = useState(false);
+  const [heartIcon, setHeartIcon] = useState<"heart" | "heart-outline">(
+    "heart-outline"
+  );
+  const [heartColor, setHeartColor] = useState<"red" | "white">("white");
 
   useEffect(() => {
-    const checkIfGameIsInFavorites = () => {
-      if (userData && game) {
-        const exists = userData.favorites.some(
-          (favoriteGame) => favoriteGame.id === game.id
+    const fetchFavorites = async () => {
+      if (!game || !userData) return;
+
+      const q = query(
+        collection(FIREBASE_DB, "users"),
+        where("userId", "==", userData.userId)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        const favoritesArray = doc.data().favorites || [];
+        const isFavorite = favoritesArray.some(
+          (favGame: Game) => favGame.id === game.id
         );
-        setIsInFavorites(exists);
-      }
+
+        // Do something with the isFavorite value if needed
+        if (isFavorite) {
+          setIsInFavorites(true);
+          setHeartColor("red");
+          setHeartIcon("heart");
+        } else {
+          setIsInFavorites(false);
+          setHeartColor("white");
+          setHeartIcon("heart-outline");
+        }
+      });
     };
 
-    checkIfGameIsInFavorites();
-  }, [userData, game]);
+    fetchFavorites();
+  }, [game, userData]);
 
-  const heartIcon = isInFavorites ? "heart" : "heart-outline";
-  const heartColor = isInFavorites ? "red" : "white";
+  const handleToggle = async () => {
+    if (game) {
+      await handleToggleFavorite(userData?.userId!, game);
+      setIsInFavorites(!isInFavorites);
+
+      if (isInFavorites) {
+        setHeartColor("white");
+        setHeartIcon("heart-outline");
+      } else {
+        setHeartColor("red");
+        setHeartIcon("heart");
+      }
+    }
+  };
 
   return (
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.7}
-      onPress={() => handleToggleFavorite(userData?.userId!, game!)}
+      onPress={handleToggle}
     >
       <Ionicons name={heartIcon} size={24} color={heartColor} />
     </TouchableOpacity>
