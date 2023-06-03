@@ -1,35 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { addToFavorites, removeFromFavorites } from "../store/favoritesSlice";
-import { RootState } from "../store";
+import { useSelector } from "react-redux";
 import Game from "../types/Game";
+import { handleToggleFavorite } from "../firebaseUtils";
+import { RootState } from "../store";
 
 interface HeartButtonProps {
   game: Game | null;
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({ game }) => {
-  const dispatch = useDispatch();
-  const favorites = useSelector((state: RootState) => state.favorites.favorites);
-  const isFavorite = favorites.some((favorite) => favorite.id === game?.id);
+  const userData = useSelector((state: RootState) => state.user.userData);
+  const [isInFavorites, setIsInFavorites] = useState(false);
 
-  const handleToggleFavorite = () => {
-    if (isFavorite && game) {
-      dispatch(removeFromFavorites(game.id));
-    } else {
-      dispatch(addToFavorites(game!));
-    }
-  };
+  useEffect(() => {
+    const checkIfGameIsInFavorites = () => {
+      if (userData && game) {
+        const exists = userData.favorites.some(
+          (favoriteGame) => favoriteGame.id === game.id
+        );
+        setIsInFavorites(exists);
+      }
+    };
+
+    checkIfGameIsInFavorites();
+  }, [userData, game]);
+
+  const heartIcon = isInFavorites ? "heart" : "heart-outline";
+  const heartColor = isInFavorites ? "red" : "white";
 
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.7} onPress={handleToggleFavorite}>
-      <Ionicons
-        name={isFavorite ? "heart" : "heart-outline"}
-        size={24}
-        color={isFavorite ? "red" : "white"}
-      />
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={0.7}
+      onPress={() => handleToggleFavorite(userData?.userId!, game!)}
+    >
+      <Ionicons name={heartIcon} size={24} color={heartColor} />
     </TouchableOpacity>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, TextInput, Text, Alert } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "@rneui/base";
 import styles from "./login.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,6 +11,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+import { FIREBASE_DB } from "../../firebaseConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { setUserData } from "../../store/userSlice";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +24,8 @@ const LoginScreen: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
 
   const navigation = useNavigation();
+  const userData = useSelector((state: RootState) => state.user.userData);
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
@@ -29,8 +35,10 @@ const LoginScreen: React.FC = () => {
         password
       );
       const user = userCredential.user;
-      const userData = { email: email, password: password };
+      const userData = { email: email, userId: user?.uid, favorites: [] };
       await AsyncStorage.setItem("loggedInUser", JSON.stringify(userData));
+      dispatch(setUserData(userData));
+
       console.log("Login successfull", user);
       navigation.navigate("HomeScreen" as never);
     } catch (error: any) {
@@ -43,13 +51,30 @@ const LoginScreen: React.FC = () => {
   const handleRegister = () => {
     if (password === confirmPassword) {
       createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
-        .then(() => {
-          // Register successfull
-          Alert.alert("Register Successfull");
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-          setIsRegistering(!isRegistering);
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const userData = {
+            userId: user?.uid,
+            email: email,
+            favorites: [],
+          };
+
+          // Add the user data to the Firestore collection
+          const usersCollection = collection(FIREBASE_DB, "users");
+          addDoc(usersCollection, userData)
+            .then(() => {
+              // Register successful
+              Alert.alert("Register Successful");
+              setEmail("");
+              setPassword("");
+              setConfirmPassword("");
+              setIsRegistering(!isRegistering);
+            })
+            .catch((error) => {
+              // Error adding user data to Firestore collection
+              console.error("Error adding user to collection:", error);
+              Alert.alert("Register failed. Please try again.");
+            });
         })
         .catch((error) => {
           // Register failed

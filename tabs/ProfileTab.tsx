@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Button, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth, signOut } from "firebase/auth";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
 import Game from "../types/Game";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getFirestore,
+} from "firebase/firestore";
+import { FIREBASE_APP, FIREBASE_AUTH } from "../firebaseConfig";
+import { clearUserData } from "../store/userSlice";
 
 const ProfileTab: React.FC = () => {
   const navigation = useNavigation();
+  const [favorites, setFavorites] = React.useState<Game[]>([]);
+  const db = getFirestore(FIREBASE_APP);
+  const userData = useSelector((state: any) => state.user.userData);
+  const dispatch = useDispatch();
 
-  const favorites: Game[] = useSelector(
-    (state: RootState) => state.favorites.favorites
-  );
+  const fetchFavorites = async () => {
+    const q = query(
+      collection(db, "users"),
+      where("userId", "==", userData.userId)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const favoritesArray = doc.data().favorites || [];
+      setFavorites(favoritesArray);
+    });
+  };
+
+  useEffect(() => {
+    fetchFavorites();
+  }, [userData.userId, favorites]);
 
   const handleLogout = async () => {
     // Firebase'den çıkış yap
@@ -21,6 +45,8 @@ const ProfileTab: React.FC = () => {
 
     // AsyncStorage'deki oturum bilgilerini temizle
     await AsyncStorage.removeItem("loggedInUser");
+
+    dispatch(clearUserData());
 
     // Giriş ekranına yönlendir
     navigation.navigate("Login" as never);

@@ -5,54 +5,45 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
 import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import HomeScreen from "./screens/HomeScreen/HomeScreen";
-import { Provider } from "react-redux";
-import {store} from "./store";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { store, RootState } from "./store";
+import { setUserData } from "./store/userSlice";
 
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-
-  const checkLoggedInUser = async () => {
-    const userData = await AsyncStorage.getItem("loggedInUser");
-
-    if (userData) {
-      setIsLoggedIn(true);
-      setIsLoading(false);
-      const parsedUserData = JSON.parse(userData);
-      console.log("User already logged in", parsedUserData);
-    } else {
-      setIsLoggedIn(false);
-      console.log("User didn't log in");
-      setIsLoading(false);
-    }
-  };
+  const userData = useSelector((state: RootState) => state.user.userData);
 
   useEffect(() => {
+    const checkLoggedInUser = async () => {
+      const storedUser = await AsyncStorage.getItem("loggedInUser");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        dispatch(setUserData(parsedUser));
+      }
+      setIsLoading(false);
+    };
+
     checkLoggedInUser();
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <LoadingScreen />;
   }
 
   return (
-    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
-        {isLoggedIn ? (
+        {userData ? (
           <>
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="Login" component={LoginScreen} />
           </>
         ) : (
           <>
@@ -70,8 +61,15 @@ const App: React.FC = () => {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+  );
+};
+
+const RootApp: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <App />
     </Provider>
   );
 };
 
-export default App;
+export default RootApp;
