@@ -54,7 +54,7 @@ const GameDetailScreen: React.FC = () => {
           style={styles.image}
         >
           <BackButton />
-          <HeartButton />
+          <HeartButton game={game} />
         </ImageBackground>
         <Info game={game} trailers={trailers} />
       </ScrollView>

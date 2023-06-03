@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { addToFavorites, removeFromFavorites } from "../store/favoritesSlice";
+import { RootState } from "../store";
+import Game from "../types/Game";
 
-const HeartButton: React.FC = () => {
-  const [isFavorite, setIsFavorite] = useState(false);
+interface HeartButtonProps {
+  game: Game | null;
+}
 
-  const handlePress = () => {
-    setIsFavorite(!isFavorite);
+const HeartButton: React.FC<HeartButtonProps> = ({ game }) => {
+  const dispatch = useDispatch();
+  const favorites = useSelector((state: RootState) => state.favorites.favorites);
+  const isFavorite = favorites.some((favorite) => favorite.id === game?.id);
+
+  const handleToggleFavorite = () => {
+    if (isFavorite && game) {
+      dispatch(removeFromFavorites(game.id));
+    } else {
+      dispatch(addToFavorites(game!));
+    }
   };
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={handlePress}
-      activeOpacity={0.7}
-    >
+    <TouchableOpacity style={styles.container} activeOpacity={0.7} onPress={handleToggleFavorite}>
       <Ionicons
         name={isFavorite ? "heart" : "heart-outline"}
         size={24}
@@ -31,7 +41,7 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1,
     backgroundColor: "gray",
-    padding:10,
+    padding: 10,
     borderRadius: 50,
   },
 });

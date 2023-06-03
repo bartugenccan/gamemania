@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
 import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import HomeScreen from "./screens/HomeScreen/HomeScreen";
+import { Provider } from "react-redux";
+import {store} from "./store";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +38,7 @@ const App: React.FC = () => {
   }
 
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator>
         {isLoggedIn ? (
@@ -67,6 +70,7 @@ const App: React.FC = () => {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 };
 
