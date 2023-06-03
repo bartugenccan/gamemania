@@ -1,17 +1,11 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "./screens/HomeScreen/HomeScreen";
-import SearchScreen from "./screens/SearchScreen/SearchScreen";
-import ProfileScreen from "./screens/ProfileScreen/ProfileScreen";
 import React, { useEffect, useState } from "react";
-import GameDetailScreen from "./screens/GameDetailScreen/GameDetailScreen";
-import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
+import LoginScreen from "./screens/LoginScreen/LoginScreen";
+import HomeScreen from "./screens/HomeScreen/HomeScreen";
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
@@ -29,6 +23,7 @@ const App: React.FC = () => {
     } else {
       setIsLoggedIn(false);
       console.log("User didn't log in");
+      setIsLoading(false);
     }
   };
 
@@ -42,32 +37,35 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="GameList"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Search"
-            component={SearchScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="GameDetail"
-            component={GameDetailScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      ) : (
-        <LoginScreen />
-      )}
+      <Stack.Navigator>
+        {isLoggedIn ? (
+          <>
+            <Stack.Screen
+              name="HomeScreen"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="HomeScreen"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

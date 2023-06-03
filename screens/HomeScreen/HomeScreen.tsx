@@ -1,20 +1,49 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import GameList from "../../components/GameList/GameList";
-import SearchScreen from "../SearchScreen/SearchScreen";
-import ProfileScreen from "../ProfileScreen/ProfileScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+import GameDetailScreen from "../GameDetailScreen/GameDetailScreen";
+import SearchTab from "../../tabs/SearchTab";
+import ProfileTab from "../../tabs/ProfileTab";
+import HomeTab from "../../tabs/HomeTab";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
 const HomeScreen: React.FC = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Tab.Screen name="Home" component={GameList} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomeStack"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GameDetail"
+        component={GameDetailScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const TabNavigator: React.FC = () => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        options={{ headerShown: false }}
+        name="HomeTab"
+        component={HomeTab}
+      />
+      <Tab.Screen
+        options={{ headerShown: false }}
+        name="SearchTab"
+        component={SearchTab}
+      />
+      <Tab.Screen
+        options={{ headerShown: false }}
+        name="ProfileTab"
+        component={ProfileTab}
+      />
     </Tab.Navigator>
   );
 };

@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "@rneui/base";
 import styles from "./login.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
 // Firebase
 import { FIREBASE_AUTH } from "../../firebaseConfig";
@@ -18,6 +19,8 @@ const LoginScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
 
+  const navigation = useNavigation();
+
   const handleLogin = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -29,6 +32,7 @@ const LoginScreen: React.FC = () => {
       const userData = { email: email, password: password };
       await AsyncStorage.setItem("loggedInUser", JSON.stringify(userData));
       console.log("Login successfull", user);
+      navigation.navigate("HomeScreen" as never);
     } catch (error: any) {
       // Login failed
       const errorMessage = error.message;
