@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Text, ImageBackground, View, FlatList, ScrollView } from "react-native";
+import {
+  Text,
+  ImageBackground,
+  View,
+  FlatList,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@rneui/themed";
 import styles from "./gamelist.style";
@@ -16,12 +23,16 @@ import GameCard from "../GameCard/GameCard";
 // Navigation
 import { useNavigation } from "@react-navigation/native";
 
+// Animation
+import AnimatedLottieView from "lottie-react-native";
+
 const GameList: React.FC = () => {
   const [randomGame, setRandomGame] = useState<Game | null>(null);
   const [games, setGames] = useState<Game[]>([]);
   const [groupedGames, setGroupedGames] = useState<{ [genre: string]: Game[] }>(
     {}
   );
+  const [loading, setLoading] = useState(true); // Loading state
 
   const navigation = useNavigation();
 
@@ -35,9 +46,12 @@ const GameList: React.FC = () => {
         // Updating random game state
         const randomIndex = Math.floor(Math.random() * response.length);
         setRandomGame(response[randomIndex]);
+
+        setLoading(false); // Set loading to false when data is fetched
       })
       .catch((error) => {
         console.log("Failed to fetch games:", error);
+        setLoading(false); // Set loading to false in case of error
       });
   }, []);
 
@@ -70,25 +84,34 @@ const GameList: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <ImageBackground
-        imageStyle={{ borderRadius: 10 }}
-        style={styles.randomGameImage}
-        source={{ uri: randomGame?.background_image }}
-      >
-        <LinearGradient
-          colors={["#00000000", "#000000"]}
-          style={styles.linearGradient}
+      {loading ? (
+        <AnimatedLottieView
+          source={require("../../animations/128373-animation-loading.json")}
+          style={{ width: "100%", height: "100%" }}
+          autoPlay
+          loop
+        />
+      ) : (
+        <ImageBackground
+          imageStyle={{ borderRadius: 10 }}
+          style={styles.randomGameImage}
+          source={{ uri: randomGame?.background_image }}
         >
-          <Button
-            title="Game Details"
-            type="outline"
-            titleStyle={{ color: "gray", fontWeight: "bold" }}
-            containerStyle={{ width: 100, alignSelf: "center" }}
-            buttonStyle={{ borderColor: "gray", borderRadius: 10 }}
-            onPress={handlePress}
-          />
-        </LinearGradient>
-      </ImageBackground>
+          <LinearGradient
+            colors={["#00000000", "#000000"]}
+            style={styles.linearGradient}
+          >
+            <Button
+              title="Game Details"
+              type="outline"
+              titleStyle={{ color: "gray", fontWeight: "bold" }}
+              containerStyle={{ width: 100, alignSelf: "center" }}
+              buttonStyle={{ borderColor: "gray", borderRadius: 10 }}
+              onPress={handlePress}
+            />
+          </LinearGradient>
+        </ImageBackground>
+      )}
 
       {Object.keys(groupedGames).map((genre) => (
         <View key={genre} style={{ marginTop: 24 }}>

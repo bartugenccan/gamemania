@@ -1,5 +1,11 @@
-import {Image, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 
 // Navigation
 import { useNavigation } from "@react-navigation/native";
@@ -13,14 +19,28 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
 
   const handlePress = () => {
     navigation.navigate("GameDetail" as never, { id: game.id } as never);
   };
 
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <Image style={styles.image} source={{ uri: game.background_image }} />
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#FFFFFF" />
+        </View>
+      )}
+      <Image
+        style={styles.image}
+        source={{ uri: game.background_image }}
+        onLoad={handleImageLoad}
+      />
     </TouchableOpacity>
   );
 };
@@ -34,6 +54,13 @@ const styles = StyleSheet.create({
     width: 150,
     borderRadius: 10,
     marginRight: 10,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    borderRadius: 10,
   },
 });
 

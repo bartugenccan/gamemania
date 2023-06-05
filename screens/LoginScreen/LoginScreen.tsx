@@ -41,6 +41,8 @@ const LoginScreen: React.FC = () => {
       dispatch(setUserData(userData));
 
       console.log("Login successfull", user.email);
+      setEmail("");
+      setPassword("");
       navigation.navigate("HomeScreen" as never);
     } catch (error: any) {
       // Login failed

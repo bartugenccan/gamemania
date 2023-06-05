@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Button,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
@@ -70,51 +63,58 @@ const ProfileTab: React.FC = () => {
     const auth = getAuth();
     await signOut(auth);
 
+    // Giriş ekranına yönlendir
+    navigation.navigate("Login" as never);
+
     // AsyncStorage'deki oturum bilgilerini temizle
     await AsyncStorage.removeItem("loggedInUser");
 
     dispatch(clearUserData());
-
-    // Giriş ekranına yönlendir
-    navigation.navigate("Login" as never);
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
-  <TouchableOpacity
-    style={{
-      position: 'absolute',
-      top: 40,
-      right: 20,
-      zIndex: 1,
-      backgroundColor: 'gray',
-      padding: 10,
-      borderRadius: 50,
-    }}
-    onPress={handleLogout}
-  >
-    <Text style={{ color: '#FFFFFF' }}>Logout</Text>
-  </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          top: 40,
+          right: 20,
+          zIndex: 1,
+          backgroundColor: "gray",
+          padding: 10,
+          borderRadius: 50,
+        }}
+        onPress={handleLogout}
+      >
+        <Text style={{ color: "#FFFFFF" }}>Logout</Text>
+      </TouchableOpacity>
 
-  <View>
-    <Text style={{ color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', marginVertical: 12 }}>
-      Favorites:
-    </Text>
+      <View>
+        <Text
+          style={{
+            color: "#FFFFFF",
+            fontSize: 24,
+            fontWeight: "bold",
+            marginVertical: 12,
+          }}
+        >
+          Favorites:
+        </Text>
 
-    {favorites.length === 0 ? (
-      <Text style={{ color: '#FFFFFF', fontSize: 18, marginTop: 12 }}>
-        You don't have any favorites yet.
-      </Text>
-    ) : (
-      <FlatList
-        data={favorites}
-        numColumns={2} // Adjust the number of columns as needed
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderGameCard}
-      />
-    )}
-  </View>
-</SafeAreaView>
+        {favorites.length === 0 ? (
+          <Text style={{ color: "#FFFFFF", fontSize: 18, marginTop: 12 }}>
+            You don't have any favorites yet.
+          </Text>
+        ) : (
+          <FlatList
+            data={favorites}
+            numColumns={2} // Adjust the number of columns as needed
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderGameCard}
+          />
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 

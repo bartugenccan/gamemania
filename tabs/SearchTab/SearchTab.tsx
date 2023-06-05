@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, SafeAreaView, ActivityIndicator } from "react-native";
 import { Input, Button } from "@rneui/base";
 import ApiService from "../../services/ApiService";
 import Game from "../../types/Game";
@@ -8,6 +8,7 @@ import SingleSearchedGame from "../../components/SingleSearchedGame/SingleSearch
 const SearchTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setSearchResults([]);
@@ -21,6 +22,7 @@ const SearchTab: React.FC = () => {
       return;
     }
     try {
+      setIsLoading(true); // Start loading
       const results = await ApiService.fetchSearchedGames(
         searchQuery.toLowerCase()
       );
@@ -28,6 +30,8 @@ const SearchTab: React.FC = () => {
       setSearchQuery("");
     } catch (error) {
       console.log("Failed to fetch searched games:", error);
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -56,11 +60,15 @@ const SearchTab: React.FC = () => {
         }}
         color={"success"}
       />
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <SingleSearchedGame game={item} />}
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#FFFFFF" />
+      ) : (
+        <FlatList
+          data={searchResults}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <SingleSearchedGame game={item} />}
+        />
+      )}
     </SafeAreaView>
   );
 };
