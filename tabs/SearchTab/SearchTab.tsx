@@ -1,11 +1,67 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, SafeAreaView } from "react-native";
+import { Input, Button } from "@rneui/base";
+import ApiService from "../../services/ApiService";
+import Game from "../../types/Game";
+import SingleSearchedGame from "../../components/SingleSearchedGame/SingleSearchedGame";
 
 const SearchTab: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Game[]>([]);
+
+  useEffect(() => {
+    setSearchResults([]);
+    setSearchQuery("");
+  }, []);
+
+  const handleSearch = async () => {
+    if (searchQuery.trim() === "") {
+      // If search term is empty, clear search results
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const results = await ApiService.fetchSearchedGames(
+        searchQuery.toLowerCase()
+      );
+      setSearchResults(results);
+      setSearchQuery("");
+    } catch (error) {
+      console.log("Failed to fetch searched games:", error);
+    }
+  };
+
   return (
-    <View>
-      <Text>Search Tab</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
+      <Input
+        style={{
+          height: 40,
+          borderColor: "gray",
+          borderWidth: 1,
+          marginBottom: 10,
+        }}
+        placeholder="Search for games..."
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+        inputStyle={{ color: "#fff", borderRadius: 10, paddingHorizontal: 10 }}
+      />
+      <Button
+        title="Search"
+        onPress={handleSearch}
+        style={{
+          width: "30%",
+          alignSelf: "center",
+          borderRadius: 18,
+          marginBottom: 22,
+        }}
+        color={"success"}
+      />
+      <FlatList
+        data={searchResults}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <SingleSearchedGame game={item} />}
+      />
+    </SafeAreaView>
   );
 };
 

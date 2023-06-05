@@ -50,6 +50,24 @@ const ApiService = {
       throw new Error(error.message);
     }
   },
+
+  fetchSearchedGames: async (searchQuery: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.rawg.io/api/games?key=${API_KEY}&search=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+
+      if (response.status === 200) {
+        return response.data.results;
+      } else {
+        throw new Error("Failed to fetch searched games.");
+      }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  },
 };
 
 export default ApiService;
