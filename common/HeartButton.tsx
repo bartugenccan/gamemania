@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
+
+// Icons
 import { Ionicons } from "@expo/vector-icons";
+
+// Redux
 import { useSelector } from "react-redux";
-import Game from "../types/Game";
-import { handleToggleFavorite } from "../firebaseUtils";
 import { RootState } from "../store";
+
+// Types
+import Game from "../types/Game";
+
+// Firebase
+import { handleToggleFavorite } from "../firebaseUtils";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 

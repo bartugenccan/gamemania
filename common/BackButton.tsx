@@ -1,6 +1,10 @@
 import React from "react";
-import { TouchableOpacity, Image, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+
+// Navigation
 import { useNavigation } from "@react-navigation/native";
+
+// Icons
 import { Ionicons } from "@expo/vector-icons";
 
 const BackButton: React.FC = () => {

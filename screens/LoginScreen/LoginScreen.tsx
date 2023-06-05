@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, Alert } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { Input, Button } from "@rneui/base";
 import styles from "./login.style";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,8 @@ import {
 } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { FIREBASE_DB } from "../../firebaseConfig";
+
+// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { setUserData } from "../../store/userSlice";
@@ -24,7 +26,6 @@ const LoginScreen: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
 
   const navigation = useNavigation();
-  const userData = useSelector((state: RootState) => state.user.userData);
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
@@ -39,7 +40,7 @@ const LoginScreen: React.FC = () => {
       await AsyncStorage.setItem("loggedInUser", JSON.stringify(userData));
       dispatch(setUserData(userData));
 
-      console.log("Login successfull", user);
+      console.log("Login successfull", user.email);
       navigation.navigate("HomeScreen" as never);
     } catch (error: any) {
       // Login failed

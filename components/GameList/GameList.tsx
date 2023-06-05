@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
-import { Text, ImageBackground, View, FlatList } from "react-native";
-import ApiService from "../../services/ApiService";
-import Game from "../../types/Game";
-import styles from "./gamelist.style";
+import React, { useEffect, useState } from "react";
+import { Text, ImageBackground, View, FlatList, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button } from "@rneui/themed";
+import styles from "./gamelist.style";
+
+// API
+import ApiService from "../../services/ApiService";
+
+// Types
+import Game from "../../types/Game";
+
+// Components
 import GameCard from "../GameCard/GameCard";
-import { ScrollView } from "react-native";
-import React from "react";
+
+// Navigation
 import { useNavigation } from "@react-navigation/native";
 
 const GameList: React.FC = () => {

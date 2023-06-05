@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ImageBackground,
-} from "react-native";
-import { useRoute } from "@react-navigation/native";
-import ApiService from "../../services/ApiService";
-import Game from "../../types/Game";
+import { SafeAreaView, ImageBackground, ScrollView } from "react-native";
 import { styles } from "./gamedetail.style";
-import { useNavigation } from "@react-navigation/native";
-import Info from "../../components/GameDetail/Info/Info";
+
+// API
+import ApiService from "../../services/ApiService";
+
+// Types
+import Game from "../../types/Game";
 import Trailer from "../../types/Trailer";
-import { ScrollView } from "react-native-gesture-handler";
+
+
+// Navigation
+import { useRoute } from "@react-navigation/native";
+
+// Components
 import BackButton from "../../common/BackButton";
 import HeartButton from "../../common/HeartButton";
+import Info from "../../components/GameDetail/Info/Info";
 
 const GameDetailScreen: React.FC = () => {
   const route = useRoute();

@@ -1,10 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+
+// Components
+import HomeTab from "../../tabs/HomeTab/HomeTab";
+import ProfileTab from "../../tabs/ProfileTab/ProfileTab";
+import SearchTab from "../../tabs/SearchTab/SearchTab";
 import GameDetailScreen from "../GameDetailScreen/GameDetailScreen";
-import SearchTab from "../../tabs/SearchTab";
-import ProfileTab from "../../tabs/ProfileTab";
-import HomeTab from "../../tabs/HomeTab";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

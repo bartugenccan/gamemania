@@ -1,8 +1,13 @@
 import React from "react";
 import { Text, View, TouchableOpacity, Linking, Alert } from "react-native";
+
+// Types
 import Game from "../../../types/Game";
-import { styles } from "./info.style";
 import Trailer from "../../../types/Trailer";
+
+// Styles
+import { styles } from "./info.style";
+
 
 type InfoProps = {
   game: Game | null;

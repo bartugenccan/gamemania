@@ -1,6 +1,10 @@
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
+
+// Navigation
 import { useNavigation } from "@react-navigation/native";
+
+// Types
 import Game from "../../types/Game";
 
 interface GameCardProps {

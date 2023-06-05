@@ -1,6 +1,4 @@
 import {
-  arrayRemove,
-  arrayUnion,
   collection,
   getDocs,
   getFirestore,
@@ -9,6 +7,8 @@ import {
   where,
 } from "firebase/firestore";
 import { FIREBASE_APP } from "./firebaseConfig";
+
+// Types
 import Game from "./types/Game";
 
 const db = getFirestore(FIREBASE_APP);

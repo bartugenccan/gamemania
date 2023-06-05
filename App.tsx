@@ -1,10 +1,16 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
-import LoginScreen from "./screens/LoginScreen/LoginScreen";
+
+// Navigation
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+
+// Components
 import HomeScreen from "./screens/HomeScreen/HomeScreen";
+import LoginScreen from "./screens/LoginScreen/LoginScreen";
+import LoadingScreen from "./screens/LoadingScreen/LoadingScreen";
+
+// Redux
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { store, RootState } from "./store";
 import { setUserData } from "./store/userSlice";
