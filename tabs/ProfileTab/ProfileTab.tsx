@@ -99,17 +99,26 @@ const ProfileTab: React.FC = () => {
 
       <View
         style={{
-          alignItems: "center",
           justifyContent: "center",
+          height: "50%",
         }}
       >
-        <Text style={{ color: "#FFFFFF" }}>Favorites:</Text>
-        <FlatList
-          data={favorites}
-          horizontal
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderGameCard}
-        />
+        <Text style={{ color: "#FFFFFF", fontSize: 24, fontWeight: "bold" }}>
+          Favorites:
+        </Text>
+
+        {favorites.length === 0 ? (
+          <Text style={{ color: "#FFFFFF", fontSize: 18, marginTop: 12 }}>
+            You don't have any favorites yet.
+          </Text>
+        ) : (
+          <FlatList
+            data={favorites}
+            horizontal
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderGameCard}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
