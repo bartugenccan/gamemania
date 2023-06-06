@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Alert } from "react-native";
 import { Input, Button } from "@rneui/base";
 import styles from "./login.style";
@@ -15,8 +15,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { FIREBASE_DB } from "../../firebaseConfig";
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch } from "react-redux";
 import { setUserData } from "../../store/userSlice";
 
 const LoginScreen: React.FC = () => {
@@ -43,6 +42,7 @@ const LoginScreen: React.FC = () => {
       console.log("Login successfull", user.email);
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       navigation.navigate("HomeScreen" as never);
     } catch (error: any) {
       // Login failed

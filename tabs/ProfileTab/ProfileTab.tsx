@@ -32,11 +32,7 @@ const ProfileTab: React.FC = () => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!userData || !userData.userId) {
-        setFavorites([]);
-        return;
-      }
-
+      if (!userData || !userData.userId) return;
       const q = query(
         collection(db, "users"),
         where("userId", "==", userData.userId)
@@ -63,13 +59,13 @@ const ProfileTab: React.FC = () => {
     const auth = getAuth();
     await signOut(auth);
 
-    // Giriş ekranına yönlendir
-    navigation.navigate("Login" as never);
-
     // AsyncStorage'deki oturum bilgilerini temizle
     await AsyncStorage.removeItem("loggedInUser");
 
     dispatch(clearUserData());
+
+    // Giriş ekranına yönlendir
+    navigation.navigate("Login" as never);
   };
 
   return (

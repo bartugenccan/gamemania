@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-
-// Icons
 import { Ionicons } from "@expo/vector-icons";
-
-// Redux
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-
-// Types
-import Game from "../types/Game";
-
-// Firebase
 import { handleToggleFavorite } from "../firebaseUtils";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
+import Game from "../types/Game";
 
 interface HeartButtonProps {
   game: Game | null;
@@ -43,16 +35,9 @@ const HeartButton: React.FC<HeartButtonProps> = ({ game }) => {
           (favGame: Game) => favGame.id === game.id
         );
 
-        // Do something with the isFavorite value if needed
-        if (isFavorite) {
-          setIsInFavorites(true);
-          setHeartColor("red");
-          setHeartIcon("heart");
-        } else {
-          setIsInFavorites(false);
-          setHeartColor("white");
-          setHeartIcon("heart-outline");
-        }
+        setIsInFavorites(isFavorite);
+        setHeartColor(isFavorite ? "red" : "white");
+        setHeartIcon(isFavorite ? "heart" : "heart-outline");
       });
     };
 
@@ -62,15 +47,13 @@ const HeartButton: React.FC<HeartButtonProps> = ({ game }) => {
   const handleToggle = async () => {
     if (game) {
       await handleToggleFavorite(userData?.userId!, game);
-      setIsInFavorites(!isInFavorites);
-
-      if (isInFavorites) {
-        setHeartColor("white");
-        setHeartIcon("heart-outline");
-      } else {
-        setHeartColor("red");
-        setHeartIcon("heart");
-      }
+      setIsInFavorites((prevIsInFavorites) => !prevIsInFavorites);
+      setHeartColor((prevHeartColor) =>
+        prevHeartColor === "red" ? "white" : "red"
+      );
+      setHeartIcon((prevHeartIcon) =>
+        prevHeartIcon === "heart" ? "heart-outline" : "heart"
+      );
     }
   };
 
